@@ -1,0 +1,33 @@
+name: mobile_utils_app
+description: QuickUtil mobile utility suite (dashboard, monitor, calendar, alarms, notifications, wallpaper tools).
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.7.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  device_info_plus: ^12.3.0
+  battery_plus: ^7.0.0
+  table_calendar: ^3.2.0
+  sqflite: ^2.4.2
+  path_provider: ^2.1.5
+  intl: ^0.20.2
+  flutter_local_notifications: ^21.0.0
+  timezone: ^0.11.0
+  image_picker: ^1.2.1
+  image: ^4.8.0
+  path: ^1.9.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+

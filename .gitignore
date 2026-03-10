@@ -1,0 +1,33 @@
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+*.dylib
+*.log
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# IDE
+.vscode/
+.idea/
+
+# SQLite
+*.db
+
+# Flutter / Dart
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+build/
+mobile_utils_app/app/
