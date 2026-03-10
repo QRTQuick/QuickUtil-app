@@ -19,4 +19,4 @@ This repo keeps a Flutter **template** and bootstraps a full buildable project (
 GitHub Actions builds artifacts on cloud runners (no local builds required):
 
 - Desktop: `.github/workflows/desktop-build.yml` (Windows `.exe` + macOS `.app`)
-- Mobile: `.github/workflows/mobile-build.yml` (Android APK+AAB + iOS `.app` zip)
+- Mobile: `.github/workflows/mobile-build.yml` (Android APK+AAB + iOS **simulator** `.app` zip)

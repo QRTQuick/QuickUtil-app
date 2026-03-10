@@ -44,7 +44,7 @@ jobs:
             mobile_utils_app/app/build/app/outputs/bundle/release/app-release.aab
 
   build-ios:
-    name: Build iOS (no-codesign)
+    name: Build iOS (simulator)
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,13 +62,13 @@ jobs:
         run: |
           flutter --version
           flutter pub get
-          flutter build ios --release --no-codesign
+          flutter build ios --release --simulator
 
       - name: Package iOS artifact
         run: |
           cd mobile_utils_app/app
-          if [ -d "build/ios/iphoneos/Runner.app" ]; then
-            ditto -c -k --sequesterRsrc --keepParent "build/ios/iphoneos/Runner.app" "../../QuickUtil-iOS.app.zip"
+          if [ -d "build/ios/iphonesimulator/Runner.app" ]; then
+            ditto -c -k --sequesterRsrc --keepParent "build/ios/iphonesimulator/Runner.app" "../../QuickUtil-iOS-simulator.app.zip"
           else
             echo "Runner.app not found" && ls -R build/ios || true
             exit 1
@@ -77,5 +77,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: QuickUtil-iOS
-          path: QuickUtil-iOS.app.zip
-
+          path: QuickUtil-iOS-simulator.app.zip
