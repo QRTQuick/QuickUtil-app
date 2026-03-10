@@ -62,7 +62,7 @@ jobs:
         run: |
           flutter --version
           flutter pub get
-          flutter build ios --release --simulator
+          flutter build ios --debug --simulator
 
       - name: Package iOS artifact
         run: |

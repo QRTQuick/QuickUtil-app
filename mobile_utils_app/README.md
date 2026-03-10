@@ -15,4 +15,4 @@ flutter run
 GitHub Actions uses the same bootstrap step and produces:
 
 - Android: APK + AAB
-- iOS: **simulator** `.app` zip (no codesign required)
+- iOS: **simulator (debug)** `.app` zip (no codesign required)

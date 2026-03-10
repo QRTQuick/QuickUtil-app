@@ -16,34 +16,58 @@ def _patch_android_build(out: Path) -> None:
     Keep changes minimal and idempotent.
     """
 
-    build_gradle = out / "android" / "app" / "build.gradle"
-    if not build_gradle.exists():
-        return
+    for build_gradle in [
+        out / "android" / "app" / "build.gradle",
+        out / "android" / "app" / "build.gradle.kts",
+    ]:
+        if not build_gradle.exists():
+            continue
 
-    text = build_gradle.read_text(encoding="utf-8")
-    original = text
+        text = build_gradle.read_text(encoding="utf-8")
+        original = text
 
-    text = text.replace("JavaVersion.VERSION_1_8", "JavaVersion.VERSION_17")
+        text = text.replace("JavaVersion.VERSION_1_8", "JavaVersion.VERSION_17")
 
-    if "coreLibraryDesugaringEnabled true" not in text and "compileOptions {" in text:
-        text = text.replace("compileOptions {", "compileOptions {\n        coreLibraryDesugaringEnabled true", 1)
+        if build_gradle.name.endswith(".kts"):
+            if "isCoreLibraryDesugaringEnabled" not in text and "compileOptions {" in text:
+                text = text.replace(
+                    "compileOptions {",
+                    "compileOptions {\n        isCoreLibraryDesugaringEnabled = true",
+                    1,
+                )
 
-    if "multiDexEnabled true" not in text and "defaultConfig {" in text:
-        text = text.replace("defaultConfig {", "defaultConfig {\n        multiDexEnabled true", 1)
+            if "multiDexEnabled" not in text and "defaultConfig {" in text:
+                text = text.replace("defaultConfig {", "defaultConfig {\n        multiDexEnabled = true", 1)
 
-    if "coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:" not in text and "dependencies {" in text:
-        text = text.replace(
-            "dependencies {",
-            "dependencies {\n    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'",
-            1,
-        )
+            if "coreLibraryDesugaring(\"com.android.tools:desugar_jdk_libs:" not in text and "dependencies {" in text:
+                text = text.replace(
+                    "dependencies {",
+                    "dependencies {\n    coreLibraryDesugaring(\"com.android.tools:desugar_jdk_libs:2.1.4\")",
+                    1,
+                )
 
-    # Ensure kotlinOptions jvmTarget is 17 if present.
-    text = re.sub(r"jvmTarget\s*=\s*['\"]1\\.8['\"]", "jvmTarget = '17'", text)
-    text = re.sub(r"jvmTarget\s*=\s*JavaVersion\\.VERSION_1_8\\.toString\\(\\)", "jvmTarget = '17'", text)
+            text = re.sub(r"jvmTarget\s*=\s*['\"]1\\.8['\"]", 'jvmTarget = "17"', text)
+            text = re.sub(r"jvmTarget\s*=\s*JavaVersion\\.VERSION_1_8\\.toString\\(\\)", 'jvmTarget = "17"', text)
+        else:
+            if "coreLibraryDesugaringEnabled true" not in text and "compileOptions {" in text:
+                text = text.replace("compileOptions {", "compileOptions {\n        coreLibraryDesugaringEnabled true", 1)
 
-    if text != original:
-        build_gradle.write_text(text, encoding="utf-8")
+            if "multiDexEnabled true" not in text and "defaultConfig {" in text:
+                text = text.replace("defaultConfig {", "defaultConfig {\n        multiDexEnabled true", 1)
+
+            if "coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:" not in text and "dependencies {" in text:
+                text = text.replace(
+                    "dependencies {",
+                    "dependencies {\n    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'",
+                    1,
+                )
+
+            # Ensure kotlinOptions jvmTarget is 17 if present.
+            text = re.sub(r"jvmTarget\s*=\s*['\"]1\\.8['\"]", "jvmTarget = '17'", text)
+            text = re.sub(r"jvmTarget\s*=\s*JavaVersion\\.VERSION_1_8\\.toString\\(\\)", "jvmTarget = '17'", text)
+
+        if text != original:
+            build_gradle.write_text(text, encoding="utf-8")
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate a buildable Flutter project from the template.")
